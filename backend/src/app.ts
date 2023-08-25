@@ -3,10 +3,13 @@ import dotenv from "dotenv";
 import helmet from 'helmet';
 dotenv.config();
 import morgan from "morgan";
-import errorHandler from "./middlewares/error/errorHandler"; 
+import errorHandler from "./middlewares/error/errorHandler";
 import cors from "./middlewares/security/cors";
 import connectDatbase from "./config/database";
-import router from "./routes/index";
+import { authRouter } from "./routes/authRouter";
+import { storeRouter } from "./routes/storeRouter";
+import { userAuthorization } from "./middlewares/authorization/userAuthorization";
+import routes from "./routes";
 
 const app = express();
 app.use(cors);
@@ -18,7 +21,7 @@ if (process.env.NODE_ENV === "dev") app.use(morgan("dev"));
 
 connectDatbase();
 
-app.use("/api/v1", router);
+app.use("/api/v1", routes);
 
 app.use(errorHandler);
 

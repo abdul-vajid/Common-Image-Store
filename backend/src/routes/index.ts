@@ -5,8 +5,8 @@ import { storeRouter } from "./storeRouter";
 
 const routes = express.Router();
 
-routes.use("/auth", userAuthorization, authRouter);
+routes.use("/auth", authRouter);
 
-routes.use("/", userAuthorization, storeRouter);
+routes.use("/store", userAuthorization, storeRouter);
 
 export default routes;
