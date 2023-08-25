@@ -6,13 +6,11 @@ import morgan from "morgan";
 import errorHandler from "./middlewares/error/errorHandler";
 import cors from "./middlewares/security/cors";
 import connectDatbase from "./config/database";
-import { authRouter } from "./routes/authRouter";
-import { storeRouter } from "./routes/storeRouter";
-import { userAuthorization } from "./middlewares/authorization/userAuthorization";
 import routes from "./routes";
 
 const app = express();
-app.use(cors);
+
+app.use(cors);;
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
