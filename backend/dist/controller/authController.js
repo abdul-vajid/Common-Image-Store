@@ -35,7 +35,7 @@ const userSignin = async (req, res, next) => {
             data: {
                 email: user.email,
                 fullname: user.fullname,
-                tire: user.tier
+                tier: user.tier
             }
         });
     }
@@ -67,7 +67,7 @@ const userSignup = async (req, res, next) => {
             data: {
                 email: newUser.email,
                 fullname: newUser.fullname,
-                tire: newUser.tier
+                tier: newUser.tier
             }
         });
     }

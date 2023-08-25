@@ -38,7 +38,7 @@ export const userSignin = async (req: Request, res: Response, next: NextFunction
             data: {
                 email: user.email,
                 fullname: user.fullname,
-                tire: user.tier
+                tier: user.tier
             }
         });
     } catch (error) {
@@ -74,7 +74,7 @@ export const userSignup = async (req: Request, res: Response, next: NextFunction
             data: {
                 email: newUser.email,
                 fullname: newUser.fullname,
-                tire: newUser.tier
+                tier: newUser.tier
             }
         });
     } catch (error) {
