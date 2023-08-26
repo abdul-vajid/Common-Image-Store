@@ -31,7 +31,7 @@ export const updateStoreImages = async (userId: string, images: Image[]): Promis
         const existingStore = await Store.findOne({ userId });
 
         if (existingStore) {
-            existingStore.images.push(...images);
+            existingStore.images.unshift(...images);
             existingStore.lastUpload = new Date();
             await existingStore.save();
             return existingStore;
