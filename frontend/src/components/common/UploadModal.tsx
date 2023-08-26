@@ -64,13 +64,15 @@ export const UploadModal: React.FC<UploadModal> = ({ handleOpen, open }) => {
                     </CardHeader>
                     <CardBody className="flex flex-row overflow-x-scroll gap-4">
                         {
-                            imageData && imageData.map((image, index) => (
+                            imageData ? imageData.map((image, index) => (
                                 <img key={index}
                                     className="h-auto w-2/6 rounded-lg object-cover object-center shadow-sm shadow-blue-gray-900/50"
                                     src={image}
                                     alt="nature image"
-                                />
-                            ))
+                                />)) : <Typography variant="h5" color="gray">
+                                No files chosen
+                            </Typography>
+
                         }
                     </CardBody>
                     <CardFooter className="pt-0 flex flex-col gap-5">

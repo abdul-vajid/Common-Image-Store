@@ -6,12 +6,17 @@ const axiosPublic = axios.create({
     baseURL: BASE_URL,
 });
 
-export const axiosPrivate = axios.create({
-    baseURL: BASE_URL,
-    headers: {
-        "Content-Type": "application/json",
-    },
-    withCredentials: true,
-});
+export const axiosPrivate = (token: String | null) => {
+    const axiosInstance = axios.create({
+        baseURL: BASE_URL,
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+        },
+        withCredentials: true,
+    });
+
+    return axiosInstance
+}
 
 export default axiosPublic;

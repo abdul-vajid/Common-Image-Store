@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
     Button,
     Dialog,
@@ -9,10 +9,35 @@ import {
     Card,
 } from "@material-tailwind/react";
 
-export const ImageCardWithModal = () => {
-    const [open, setOpen] = React.useState(false);
+type ImageCardWithModal = {
+    imageUrl: string,
+    fileName: string
+}
+
+export const ImageCardWithModal: React.FC<ImageCardWithModal> = ({ imageUrl, fileName }) => {
+    const [open, setOpen] = useState(false);
 
     const handleOpen = () => setOpen((cur) => !cur);
+
+    const handleDownload = async () => {
+        try {
+            const response = await fetch(imageUrl);
+            const blob = await response.blob();
+            const blobUrl = URL.createObjectURL(blob);
+
+            const link = document.createElement('a');
+            link.href = blobUrl;
+            link.download = fileName;
+
+            document.body.appendChild(link);
+            link.click();
+
+            document.body.removeChild(link);
+            URL.revokeObjectURL(blobUrl);
+        } catch (error) {
+            console.error('Error downloading image:', error);
+        }
+    };
 
     return (
         <>
@@ -23,24 +48,23 @@ export const ImageCardWithModal = () => {
                 <img
                     alt="nature"
                     className="h-full w-full object-cover object-center"
-                    src="https://images.unsplash.com/photo-1485470733090-0aae1788d5af?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2717&q=80"
-                />
+                    src={imageUrl} />
             </Card>
             <Dialog size="lg" open={open} handler={handleOpen}>
                 <DialogHeader className="justify-between">
-                    <div className="flex items-center gap-3">   
+                    <div className="flex items-center gap-3">
                         <div className="-mt-px flex flex-col">
                             <Typography
                                 variant="small"
                                 color="blue-gray"
                                 className="font-medium"
                             >
-                                Date and time
+                                Uploaded by you
                             </Typography>
                         </div>
                     </div>
                     <div className="flex items-center gap-2">
-                        <Button color="green" size="sm">
+                        <Button color="green" onClick={handleDownload} size="sm">
                             Free Download
                         </Button>
                     </div>
@@ -49,10 +73,17 @@ export const ImageCardWithModal = () => {
                     <img
                         alt="nature"
                         className="h-2/4 w-full object-cover object-center"
-                        src="https://images.unsplash.com/photo-1485470733090-0aae1788d5af?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2717&q=80"
+                        src={imageUrl}
                     />
                 </DialogBody>
                 <DialogFooter>
+                    <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-light"
+                    >
+                        Common Image Store ©️
+                    </Typography>
                 </DialogFooter>
             </Dialog>
         </>

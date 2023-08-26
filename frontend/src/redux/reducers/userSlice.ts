@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { AxiosInstance } from 'axios';
-import { AuthAPIResponse } from '../../utils/types/typesApiResponse';
+import { AuthAPIResponse } from '../../utils/types/types';
 
 type InitialState = {
     fullName: string | null;

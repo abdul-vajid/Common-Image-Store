@@ -1,39 +1,72 @@
 import React, { useEffect } from 'react';
-import { Button } from "@material-tailwind/react";
+import { Button, Spinner, Typography } from "@material-tailwind/react";
 import { NavbarDefault } from '../components/layout/NavbarDefault';
 import { UploadModal } from '../components/common/UploadModal';
-import { useAppSelector } from '../app/hooks/storeHook';
+import { useAppDispatch, useAppSelector } from '../app/hooks/storeHook';
 import { ImageCardWithModal } from '../components/common/ImageCardWithModal';
 import { useNavigate } from 'react-router-dom';
+import { fetchStore } from '../redux/reducers/storeSlice';
+import { axiosPrivate } from '../app/config/apiConfig';
+import { Image } from '../utils/types/types';
+import emptyList from "../assets/images/empty-list.png";
+import error from "../assets/images/something-went-wrong.png";
 
 export const HomePage: React.FC = () => {
-  const { tier, accessToken } = useAppSelector(state => state.userReducer);
+  const { tier, accessToken, fullName } = useAppSelector(state => state.userReducer);
+  const { store, fetchLoading, fetchError } = useAppSelector(state => state.storeReducer);
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
+  const axiosInstance = axiosPrivate(accessToken)
   const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => setOpen((cur) => !cur);
 
-  console.log("acc", accessToken)
+  useEffect(() => {
+    if (!accessToken) navigate("/")
+  }, [accessToken])
 
   useEffect(() => {
-    if(!accessToken) navigate("/")
-  }, [accessToken])
+    dispatch(fetchStore(axiosInstance));
+  }, []);
+
   return (
     <div className='relative h-full w-full bg-white'>
       <div className='fixed z-10 w-full'>
         <NavbarDefault />
       </div>
       <UploadModal handleOpen={handleOpen} open={open} />
-      <div className='mx-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 grid-flow-row gap-4 max-w-screen-xl py-20 px-4 lg:px-8 lg:py-28'>
-        <ImageCardWithModal />
-        <ImageCardWithModal />
-        <ImageCardWithModal />
-        <ImageCardWithModal />
-        <ImageCardWithModal />
-        <ImageCardWithModal />
-        <ImageCardWithModal />
-        <ImageCardWithModal />
-      </div>
+      {store && store.images.length > 0 ?
+        <div className='mx-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 grid-flow-row gap-4 max-w-screen-xl py-20 px-4 lg:px-8 lg:py-28'>
+          {
+            store.images.map((image: Image, index: number) => (
+              <ImageCardWithModal imageUrl={image.url} fileName={`CIS-image-by-${fullName}-${index}`} key={index} />
+            ))
+          }
+
+        </div> :
+        fetchLoading ? <div className='w-full h-full mx-auto flex justify-center max-w-screen-xl py-48 px-4 lg:px-8 lg:py-64'><Spinner className="h-16 w-16 text-gray-900/50 animate-spin" /></div> :
+          (!store && fetchError) ? <div className='w-full h-full mx-auto flex justify-center max-w-screen-xl py-36 px-4 lg:px-8 lg:py-36'>
+            <div>
+              <img src={emptyList} alt="Can not found Images" />
+              <Typography
+                variant="h4"
+                color="gray"
+                className="font-medium text-center pt-5"
+              > Your store is empty </Typography>
+            </div>
+          </div> :
+            <div className='w-full h-full mx-auto flex justify-center max-w-screen-xl py-36 px-4 lg:px-8 lg:py-36'>
+              <div>
+                <img src={error} alt="Can not found Images" />
+                <Typography
+                  variant="h4"
+                  color="gray"
+                  className="font-medium text-center pt-5"
+                > {fetchError ? fetchError : "Oops! We could not locate your store."} </Typography>
+              </div>
+            </div>
+      }
+
       <div className="fixed bottom-6 right-6 md:bottom-10 md:right-10">
         <Button
           onClick={handleOpen} variant="gradient"
