@@ -24,7 +24,7 @@ const initialState: InitialState = {
 
 type PostOptions = {
     axiosInstance: AxiosInstance,
-    images: FormData
+    files: File[]
 }
 
 
@@ -40,12 +40,21 @@ export const fetchStore = createAsyncThunk('store/get', async (axiosInstance: Ax
 
 export const uploadToStore = createAsyncThunk('store/post', async (options: PostOptions) => {
     const axios = options.axiosInstance;
+    const formData = new FormData();
+    options.files.forEach((file) => {
+        formData.append('images', file);
+    });
     try {
-        const response = await axios.post("/store", {
-            images: options.images
-        });
+        const response = await axios.post("/store/upload", formData,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                }
+            });
+        console.log("response.data uploadToStore", response.data)
         return response.data;
     } catch (error: any) {
+        console.log("error inside uploadToStore catch", error)
         throw new Error(error.response?.data?.message || 'Something went wrong');
     }
 })
