@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    margin: 0;
+    font-family: "DM Sans", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Hide the scrollbar for webkit-based browsers (Chrome, Safari) */
+ ::-webkit-scrollbar {
+    width: 0.5rem; /* Set the width of the invisible scrollbar */
+  }
+  
+  /* Optional: Add some styling to your scrollbar track */
+  ::-webkit-scrollbar-track {
+    background: transparent; /* Set a transparent background */
+  }
+  
+  /* Hide the scrollbar thumb */
+  ::-webkit-scrollbar-thumb {
+    background: transparent; /* Set the thumb color to transparent */
+  }
+  

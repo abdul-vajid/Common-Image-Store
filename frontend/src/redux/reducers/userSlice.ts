@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { AxiosInstance } from 'axios';
-
+import { AuthAPIResponse } from '../../utils/types/typesApiResponse';
 
 type InitialState = {
     fullName: string | null;
@@ -24,22 +24,39 @@ const initialState: InitialState = {
     signupLoading: false
 }
 
+type SigninOptions = {
+    axiosInstance: AxiosInstance,
+    email: string,
+    password: string
+}
 
-export const userSignin = createAsyncThunk('user/signin', async (axiosInstance: AxiosInstance) => {
-    const axios = axiosInstance;
+type SignupOptions = {
+    axiosInstance: AxiosInstance,
+    fullname: string,
+    email: string,
+    password: string
+}
+
+
+export const userSignin = createAsyncThunk('user/signin', async (options: SigninOptions) => {
+    const axios = options.axiosInstance;
     try {
-        const response = await axios.get("/signin");
-        return response.data.data;
+        const response = await axios.post("/auth/signin", { email: options.email, password: options.password });
+        return response.data;
     } catch (error: any) {
         throw new Error(error.response?.data?.message || 'Something went wrong');
     }
 })
 
-export const userSignup = createAsyncThunk('user/signup', async (axiosInstance: AxiosInstance) => {
-    const axios = axiosInstance;
+export const userSignup = createAsyncThunk('user/signup', async (options: SignupOptions) => {
+    const axios = options.axiosInstance;
     try {
-        const response = await axios.get("/signup");
-        return response.data.data;
+        const response = await axios.post("/auth/signup", {
+            email: options.email,
+            fullname: options.fullname,
+            password: options.password
+        });
+        return response.data;
     } catch (error: any) {
         throw new Error(error.response?.data?.message || 'Something went wrong');
     }
@@ -50,7 +67,10 @@ const userSlice = createSlice({
     initialState,
     reducers: {
         signout: state => {
-            state = initialState;
+            state.accessToken = null;
+            state.email = null;
+            state.fullName = null;
+            state.tier = "FREE"
         },
     },
     extraReducers: (builder) => {
@@ -58,12 +78,12 @@ const userSlice = createSlice({
             state.signinError = null;
             state.signinLoading = true;
         })
-            .addCase(userSignin.fulfilled, (state, action: PayloadAction<Partial<typeof initialState>>) => {
+            .addCase(userSignin.fulfilled, (state, action: PayloadAction<AuthAPIResponse>) => {
                 state.signinLoading = false;
-                state.fullName = action.payload.fullName || null;
-                state.email = action.payload.email || null;
                 state.accessToken = action.payload.accessToken || null;
-                state.tier = action.payload.tier || "FREE";
+                state.fullName = action.payload.data.fullname || null;
+                state.email = action.payload.data.email || null;
+                state.tier = action.payload.data.tier || "FREE";
             })
             .addCase(userSignin.rejected, (state, action) => {
                 state.signinLoading = false;
@@ -73,12 +93,12 @@ const userSlice = createSlice({
                 state.signupError = null;
                 state.signupLoading = true;
             })
-            .addCase(userSignup.fulfilled, (state, action: PayloadAction<Partial<typeof initialState>>) => {
+            .addCase(userSignup.fulfilled, (state, action: PayloadAction<AuthAPIResponse>) => {
                 state.signupLoading = false;
-                state.fullName = action.payload.fullName || null;
-                state.email = action.payload.email || null;
                 state.accessToken = action.payload.accessToken || null;
-                state.tier = action.payload.tier || "FREE";
+                state.fullName = action.payload.data.fullname || null;
+                state.email = action.payload.data.email || null;
+                state.tier = action.payload.data.tier || "FREE";
             })
             .addCase(userSignup.rejected, (state, action) => {
                 state.signupLoading = false;

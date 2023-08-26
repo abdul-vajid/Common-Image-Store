@@ -7,7 +7,7 @@ import rootReducer from './rootReducer';
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['auth'],
+  whitelist: ['userReducer'],
   expires: 7 * 24 * 60 * 60
 };
 
@@ -19,7 +19,6 @@ const store = configureStore({
     getDefaultMiddleware({
       serializableCheck: false,
     }),
-
 });
 
 const persistor = persistStore(store);
