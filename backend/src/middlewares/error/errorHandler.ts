@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import ErrorResponse from "./ErrorResponse";
 
 const errorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
-  console.error(err);
 
   if (err instanceof ErrorResponse) {
     return res.status(err.status).json({

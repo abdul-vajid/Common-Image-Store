@@ -6,6 +6,7 @@ interface UserAttrs {
     password: string;
     fullname: string;
     tier?: "FREE" | "PRO";
+    tireExpires?: Date;
 }
 
 interface UserModal extends mongoose.Model<UserDoc> {
@@ -17,6 +18,7 @@ interface UserDoc extends mongoose.Document {
     password: string;
     fullname: string;
     tier: "FREE" | "PRO";
+    tireExpires?: Date;
     updatedAt: Date;
     version: number;
 }
@@ -26,6 +28,7 @@ const userSchema = new mongoose.Schema(
         email: {
             type: String,
             required: true,
+            unique: true
         },
         password: {
             type: String,
@@ -39,6 +42,10 @@ const userSchema = new mongoose.Schema(
             type: String,
             enum: ["FREE", "PRO"],
             default: "FREE"
+        },
+        tireExpires: {
+            type: Date,
+            required: false,
         }
     },
     {

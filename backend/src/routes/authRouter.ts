@@ -1,12 +1,12 @@
 import express from 'express';
-import { userSignin, userSignup } from '../controller/authController';
+import { userSigninController, userSignupController } from '../controller/authController';
 import signinValidation from '../middlewares/validation/signinValidation';
 import signupValidation from '../middlewares/validation/signupValidation';
 
 const authRouter = express.Router();
 
-authRouter.post('/signin', signinValidation, userSignin);
+authRouter.post('/signin', signinValidation, userSigninController);
 
-authRouter.post('/signup', signupValidation, userSignup);
+authRouter.post('/signup', signupValidation, userSignupController);
 
 export { authRouter };

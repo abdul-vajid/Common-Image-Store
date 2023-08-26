@@ -11,7 +11,7 @@ const tokenInstance = new Token({
     verifyOptions: {},
 });
 
-export const userSignin = async (req: Request, res: Response, next: NextFunction) => {
+export const userSigninController = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = res.locals.validData;
     try {
         const user: UserDoc = await findUserByEmail(email);
@@ -46,7 +46,7 @@ export const userSignin = async (req: Request, res: Response, next: NextFunction
     }
 };
 
-export const userSignup = async (req: Request, res: Response, next: NextFunction) => {
+export const userSignupController = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password, fullname } = res.locals.validData;
     try {
         const userExists: UserDoc = await findUserByEmail(email);
