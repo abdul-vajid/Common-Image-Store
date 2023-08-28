@@ -1,6 +1,6 @@
 import express from "express";
 import { userAuthorization } from "../middlewares/authorization/userAuthorization";
-import { authRouter } from "./authRouter";
+import { authRouter } from "./userRouter";
 import { storeRouter } from "./storeRouter";
 
 const routes = express.Router();

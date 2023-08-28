@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express"
 import bcrypt from "bcryptjs"
 import ErrorResponse from "../middlewares/error/ErrorResponse";
 import { UserDoc } from "../models/userModel";
-import { createUser, findUserByEmail } from "../repositories/authRepo";
+import { createUser, findUserByEmail } from "../repositories/userRepo";
 import { Token } from "../utils/Token";
 
 const tokenInstance = new Token({
@@ -25,8 +25,7 @@ export const userSigninController = async (req: Request, res: Response, next: Ne
 
         const payload = {
             email: user.email,
-            _id: user._id,
-            tier: user.tier
+            _id: user._id
         };
 
         const generatedToken = tokenInstance.generate(payload);
@@ -66,7 +65,6 @@ export const userSignupController = async (req: Request, res: Response, next: Ne
         };
 
         const generatedToken = tokenInstance.generate(payload);
-
         res.status(201).json({
             success: true,
             message: "Account successfully created",

@@ -1,5 +1,5 @@
 import express from 'express';
-import { userSigninController, userSignupController } from '../controller/authController';
+import { userSigninController, userSignupController } from '../controller/userController';
 import signinValidation from '../middlewares/validation/signinValidation';
 import signupValidation from '../middlewares/validation/signupValidation';
 

@@ -30,16 +30,20 @@ export const multipleFileUpload = async (
     files: UploadedFile[]
 ): Promise<UploadApiResponse[]> => {
     const promises = files.map(async (file) => {
-        const formattedFile = dUri.format(
-            path.extname(file.originalname).toString(),
-            file.buffer
-        );
+        try {
+            const formattedFile = dUri.format(
+                path.extname(file.originalname).toString(),
+                file.buffer
+            );
 
-        const result = await configureCloudinary().uploader.upload(formattedFile.content, {
-            folder: "commonCloudStore",
-        });
+            const result = await configureCloudinary().uploader.upload(formattedFile.content, {
+                folder: "commonCloudStore",
+            });
 
-        return result;
+            return result;
+        } catch (error) {
+            throw new Error(error)
+        }
     });
 
     const results = await Promise.all(promises);
@@ -47,6 +51,7 @@ export const multipleFileUpload = async (
 };
 
 export const handleFileUpload = async (req: Request): Promise<UploadApiResponse | UploadApiResponse[]> => {
+
     if (req.file) {
         const singleFile = req.file;
         const singleUploadResult = await singleFileUpload(singleFile);

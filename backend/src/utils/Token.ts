@@ -3,7 +3,6 @@ import JWT, { SignOptions, VerifyOptions } from "jsonwebtoken";
 interface TokenPayload {
     email: string;
     _id: string;
-    tier: string;
 }
 
 interface TokenDependencies {
