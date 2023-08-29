@@ -1,5 +1,5 @@
 import express from 'express';
-import { getPlansController, getStoreController, subscriptionController, uploadController, verifyPaymentController } from '../controller/storeController';
+import { getPlansController, getStoreController, subscriptionController, unsubscribtionController, uploadController, verifyPaymentController } from '../controller/storeController';
 import { parseImages } from '../middlewares/fileUpload/multer';
 
 const storeRouter = express.Router();
@@ -11,6 +11,8 @@ storeRouter.get('/plans', getPlansController)
 storeRouter.post('/subscribe', subscriptionController)
 
 storeRouter.post('/verify-payment', verifyPaymentController)
+
+storeRouter.post('/unsubscribe', unsubscribtionController)
 
 storeRouter.get('/', getStoreController);
 

@@ -16,21 +16,21 @@ export const uploadController = async (req: Request, res: Response, next: NextFu
         if (!user) {
             return next(ErrorResponse.unauthorized("Unauthorized access."));
         }
-        
-        
+
+
         if (user.tier === "FREE" && Array.isArray(req.files) && req.files.length > 1) {
             return next(ErrorResponse.badRequest("Free tier users can only upload one image at a time."));
         }
-        
+
         const store = await findByUserId(_id);
         if (user.tier === "FREE" && store && store.lastUpload) {
             const timeDifference = await timeDifferenceInHours(store.lastUpload);
-            
+
             if (timeDifference < 1) {
                 return next(ErrorResponse.badRequest("Free tier users are limited to uploading only one image per hour."));
             }
         }
-        
+
         const uploadResult = await handleFileUpload(req);
         let images: Image[] = [];
         if (Array.isArray(uploadResult)) {
@@ -45,7 +45,7 @@ export const uploadController = async (req: Request, res: Response, next: NextFu
                 url: uploadResult.url,
                 signature: uploadResult.signature
             })
-            
+
         }
         let updatedStore;
         !store ? updatedStore = await createStore(_id, images) : updatedStore = await updateStoreImages(_id, images);
@@ -157,3 +157,20 @@ export const verifyPaymentController = async (req: Request, res: Response, next:
         next(error)
     }
 }
+
+export const unsubscribtionController = async (req: Request, res: Response, next: NextFunction) => {
+    const { _id } = res.locals.deCode
+    try {
+        const updatedUser = await updateTier(_id, "FREE", null);
+        if (!updatedUser) return next(ErrorResponse.unauthorized("Unauthorized access."));
+
+        return res.status(200).json({
+            success: true,
+            message: "You have unsubscribed from the Pro Tier access.",
+            user: updatedUser
+        })
+
+    } catch (error) {
+
+    }
+} 
