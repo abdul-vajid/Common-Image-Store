@@ -8,7 +8,7 @@ type InitialState = {
     uploadLoading: boolean;
     isUploaded: boolean;
     fetchError: string | null,
-    fetchLoading: boolean;
+    fetchLoading: boolean
 }
 
 const initialState: InitialState = {
@@ -53,13 +53,11 @@ export const uploadToStore = createAsyncThunk('store/post', async (options: Post
                     "Content-Type": "multipart/form-data",
                 }
             });
-        console.log("response.data uploadToStore", response.data)
         return response.data;
     } catch (error: any) {
-        console.log("error inside uploadToStore catch", error)
         throw new Error(error.response?.data?.message || 'Something went wrong');
     }
-})
+});
 
 const storeSlice = createSlice({
     name: 'store',
