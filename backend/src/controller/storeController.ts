@@ -145,8 +145,8 @@ export const verifyPaymentController = async (req: Request, res: Response, next:
             return next(ErrorResponse.badRequest("We couldn't process your payment."));
         }
 
-        const tireExpires = getNext30thDayAt1159PM();
-        const updatedUser = await updateTier(_id, "PRO", tireExpires);
+        const tierExpires = getNext30thDayAt1159PM();
+        const updatedUser = await updateTier(_id, "PRO", tierExpires);
 
         res.status(200).json({
             success: true,

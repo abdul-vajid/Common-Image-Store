@@ -6,7 +6,7 @@ interface UserAttrs {
     password: string;
     fullname: string;
     tier?: "FREE" | "PRO";
-    tireExpires?: Date;
+    tierExpires?: Date;
 }
 
 interface UserModal extends mongoose.Model<UserDoc> {
@@ -18,7 +18,7 @@ interface UserDoc extends mongoose.Document {
     password: string;
     fullname: string;
     tier: "FREE" | "PRO";
-    tireExpires?: Date;
+    tierExpires?: Date;
     updatedAt: Date;
     version: number;
 }
@@ -43,7 +43,7 @@ const userSchema = new mongoose.Schema(
             enum: ["FREE", "PRO"],
             default: "FREE"
         },
-        tireExpires: {
+        tierExpires: {
             type: Date,
             required: false,
         }

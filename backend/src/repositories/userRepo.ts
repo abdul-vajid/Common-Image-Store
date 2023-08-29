@@ -27,12 +27,12 @@ export const findUserById = async (_id: string): Promise<UserDoc> => {
     }
 };
 
-export const updateTier = async (_id: string, tier: "FREE" | "PRO", tireExpires: Date | null): Promise<UserDoc> => {
+export const updateTier = async (_id: string, tier: "FREE" | "PRO", tierExpires: Date | null): Promise<UserDoc> => {
     try {
         const doc = await User.findOneAndUpdate({ _id }, {
             $set: {
                 tier,
-                tireExpires
+                tierExpires
             },
             new: true
         });
