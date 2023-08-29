@@ -13,7 +13,7 @@ import {
 import { useAppDispatch, useAppSelector } from "../../app/hooks/storeHook";
 import { axiosPrivate } from "../../app/config/apiConfig";
 import { uploadToStore } from "../../redux/reducers/storeSlice";
-import { useErrorToast } from "../../app/hooks/toastHooks";
+import { useErrorToast, useSuccessToast } from "../../app/hooks/toastHooks";
 
 
 type UploadModal = {
@@ -25,7 +25,7 @@ export const UploadModal: React.FC<UploadModal> = ({ handleOpen, open }) => {
     const [imageData, setImageData] = useState<File[]>([]);
     const [images, setImage] = useState<string[] | null>(null);
     const { tier, accessToken } = useAppSelector(state => state.userReducer)
-    const { uploadLoading, store, uploadError } = useAppSelector(state => state.storeReducer)
+    const { uploadLoading, store, uploadError, isUploaded } = useAppSelector(state => state.storeReducer)
     const dispatch = useAppDispatch()
     const axiosInstance = axiosPrivate(accessToken)
 
@@ -44,6 +44,14 @@ export const UploadModal: React.FC<UploadModal> = ({ handleOpen, open }) => {
         if (uploadError) useErrorToast({ message: uploadError })
     }, [uploadError])
 
+    useEffect(() => {
+        if (isUploaded) {
+            const successMessage: string = imageData.length > 1 ? "Images successfully uploaded" : "Image successfully uploaded"
+            setImageData([]);
+            setImage(null)
+            useSuccessToast({ message: successMessage })
+        }
+    }, [isUploaded]);
 
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {

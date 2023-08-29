@@ -93,6 +93,7 @@ export const SigninPage: React.FC = () => {
                                         size="lg"
                                         label="Password"
                                         name='password'
+                                        type='password'
                                         onChange={formik.handleChange}
                                         value={formik.values.password}
                                         crossOrigin={undefined}

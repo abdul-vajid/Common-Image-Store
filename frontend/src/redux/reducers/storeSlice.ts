@@ -6,6 +6,7 @@ type InitialState = {
     store: Store;
     uploadError: string | null,
     uploadLoading: boolean;
+    isUploaded: boolean;
     fetchError: string | null,
     fetchLoading: boolean;
 }
@@ -16,6 +17,7 @@ const initialState: InitialState = {
         lastUpload: null,
         images: []
     },
+    isUploaded: false,
     uploadError: null,
     uploadLoading: false,
     fetchError: null,
@@ -80,13 +82,16 @@ const storeSlice = createSlice({
             .addCase(uploadToStore.pending, (state) => {
                 state.uploadError = null;
                 state.uploadLoading = true;
+                state.isUploaded = false;
             })
             .addCase(uploadToStore.fulfilled, (state, action: PayloadAction<StoreApiResponse>) => {
                 state.uploadLoading = false;
+                state.isUploaded = true;
                 state.store = action.payload.store
             })
             .addCase(uploadToStore.rejected, (state, action) => {
                 state.uploadLoading = false;
+                state.isUploaded = false;
                 state.uploadError = action.error.message || 'Something went wrong, Try again';
             })
     },

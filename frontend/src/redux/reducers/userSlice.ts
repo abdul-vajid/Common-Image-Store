@@ -9,8 +9,9 @@ type InitialState = {
     accessToken: string | null;
     signinError: string | null,
     signinLoading: boolean;
-    signupError: string | null,
+    signupError: string | null;
     signupLoading: boolean;
+    isJustSign: boolean;
 }
 
 const initialState: InitialState = {
@@ -21,7 +22,8 @@ const initialState: InitialState = {
     signinError: null,
     signinLoading: false,
     signupError: null,
-    signupLoading: false
+    signupLoading: false,
+    isJustSign: false
 }
 
 type SigninOptions = {
@@ -72,28 +74,36 @@ const userSlice = createSlice({
             state.fullName = null;
             state.tier = "FREE"
         },
+        setIsJustSignFalse: state => {
+            state.isJustSign = false;
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(userSignin.pending, (state) => {
             state.signinError = null;
             state.signinLoading = true;
+            state.isJustSign = false;
         })
             .addCase(userSignin.fulfilled, (state, action: PayloadAction<AuthAPIResponse>) => {
                 state.signinLoading = false;
+                state.isJustSign = true;
                 state.accessToken = action.payload.accessToken || null;
                 state.fullName = action.payload.data.fullname || null;
                 state.email = action.payload.data.email || null;
                 state.tier = action.payload.data.tier || "FREE";
             })
             .addCase(userSignin.rejected, (state, action) => {
+                state.isJustSign = false;
                 state.signinLoading = false;
                 state.signinError = action.error.message || 'Something went wrong, Try again';
             })
             .addCase(userSignup.pending, (state) => {
+                state.isJustSign = false;
                 state.signupError = null;
                 state.signupLoading = true;
             })
             .addCase(userSignup.fulfilled, (state, action: PayloadAction<AuthAPIResponse>) => {
+                state.isJustSign = true;
                 state.signupLoading = false;
                 state.accessToken = action.payload.accessToken || null;
                 state.fullName = action.payload.data.fullname || null;
@@ -102,10 +112,11 @@ const userSlice = createSlice({
             })
             .addCase(userSignup.rejected, (state, action) => {
                 state.signupLoading = false;
+                state.isJustSign = false;
                 state.signupError = action.error.message || 'Something went wrong, Try again';
             })
     },
 })
 
 export default userSlice.reducer
-export const { signout } = userSlice.actions
+export const { signout, setIsJustSignFalse } = userSlice.actions

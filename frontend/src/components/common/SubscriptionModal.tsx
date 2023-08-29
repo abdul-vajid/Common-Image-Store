@@ -15,7 +15,6 @@ type SubscriptionModal = {
 }
 
 export const SubscriptionModal: React.FC<SubscriptionModal> = ({ handleOpen, open }) => {
-
     return (
         <>
             <Dialog size="lg" open={open} handler={handleOpen}>

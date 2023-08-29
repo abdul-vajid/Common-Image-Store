@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Navbar,
   Typography,
@@ -6,15 +6,41 @@ import {
   Switch
 } from "@material-tailwind/react";
 import { SubscriptionModal } from "../common/SubscriptionModal";
-import { useAppDispatch } from "../../app/hooks/storeHook";
-import { signout } from "../../redux/reducers/userSlice";
+import { useAppDispatch, useAppSelector } from "../../app/hooks/storeHook";
+import { signout, setIsJustSignFalse } from "../../redux/reducers/userSlice";
+import { TierSwitchAlert } from "../common/TierSwitchingAlert";
 
 export const NavbarDefault: React.FC = () => {
+  const { isJustSign, tier } = useAppSelector(state => state.userReducer)
   const dispatch = useAppDispatch()
   const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => setOpen((cur) => !cur);
   const handleSignout = () => dispatch(signout());
+
+  const [isTierSwitchAlert, setTierSwitchAlert] = React.useState(false);
+
+  const handleTierSwitchAlert = () => {
+    setTierSwitchAlert(!isTierSwitchAlert)
+  };
+
+  const handleSwith = () => {
+    switch (tier) {
+      case "PRO":
+        setTierSwitchAlert(true)
+        break;
+      default:
+        setOpen(true)
+    }
+  }
+
+  useEffect(() => {
+    if (tier === "FREE" && isJustSign) {
+      setOpen(true)
+      dispatch(setIsJustSignFalse())
+    }
+  }, [isJustSign])
+
   return (
     <>
       <Navbar className="mx-auto max-w-screen-xl py-2 px-4 lg:px-8 lg:py-4">
@@ -33,7 +59,8 @@ export const NavbarDefault: React.FC = () => {
           </Typography>
           <div className="flex align-middle gap-4">
             <Switch
-              onChange={handleOpen}
+              onChange={handleSwith}
+              checked={tier === "PRO" ? true : false}
               id="custom-switch-component"
               ripple={false}
               label={
@@ -56,6 +83,7 @@ export const NavbarDefault: React.FC = () => {
           </div>
         </div>
       </Navbar>
+      {isTierSwitchAlert && <TierSwitchAlert open={isTierSwitchAlert} handleOpen={handleTierSwitchAlert} />}
       <SubscriptionModal handleOpen={handleOpen} open={open} />
     </>
   );
