@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import ErrorResponse from "src/middlewares/error/ErrorResponse";
+import ErrorResponse from "../middlewares/error/ErrorResponse";
 import crypto from "crypto"
-import { stripe, subscriptionPlans } from "src/utils/stripe";
-import { getNext30thDayAt1159PM } from "src/utils/momentTimezone";
-import { updateTier } from "src/repositories/userRepo";
+import { stripe, subscriptionPlans } from "../utils/stripe";
+import { getNext30thDayAt1159PM } from "../utils/momentTimezone";
+import { updateTier } from "../repositories/userRepo";
 
 export const subscriptionController = async (req: Request, res: Response, next: NextFunction) => {
     const { priceId } = req.body;

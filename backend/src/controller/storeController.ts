@@ -5,7 +5,7 @@ import { createStore, findByUserId, updateStoreImages } from "../repositories/st
 import {  timeDifferenceInHours } from "../utils/momentTimezone";
 import { Image } from "../models/storeModel";
 import { findUserById } from "../repositories/userRepo";
-import { UserDoc } from "src/models/userModel";
+import { UserDoc } from "../models/userModel";
 
 export const uploadController = async (req: Request, res: Response, next: NextFunction) => {
     const { _id } = res.locals.deCode
