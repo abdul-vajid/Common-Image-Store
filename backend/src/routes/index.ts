@@ -9,4 +9,6 @@ routes.use("/auth", authRouter);
 
 routes.use("/store", userAuthorization, storeRouter);
 
+routes.use("/subscription", userAuthorization, storeRouter);
+
 export default routes;
