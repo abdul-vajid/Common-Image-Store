@@ -27,17 +27,18 @@ export const findUserById = async (_id: string): Promise<UserDoc> => {
     }
 };
 
-export const updateTier = async (_id: string, tier: "FREE" | "PRO", tierExpires: Date | null): Promise<UserDoc> => {
+export const updateTier = async (_id: string, tier: string, tierExpires: Date | null): Promise<UserDoc> => {
     try {
+        const options = { new: true };
         const doc = await User.findOneAndUpdate({ _id }, {
             $set: {
                 tier,
                 tierExpires
-            },
-            new: true
-        });
+            }
+        }, options);
+
         return doc as UserDoc;
     } catch (error) {
-        throw new Error(error.message || "Somethinng went wrong! Try again later")
+        throw new Error(error.message || "Something went wrong! Try again later");
     }
 };
