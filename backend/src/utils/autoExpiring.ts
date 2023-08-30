@@ -1,6 +1,6 @@
 import moment from "moment-timezone";
-import { UserDoc } from "src/models/userModel";
-import { findAllProUsers, updateTierByIds } from "src/repositories/userRepo";
+import { UserDoc } from "../models/userModel";
+import { findAllProUsers, updateTierByIds } from "../repositories/userRepo";
 
 export const expiredProUsers = (users: UserDoc[]) => {
     const currentTime = moment.tz('Asia/Kolkata');
