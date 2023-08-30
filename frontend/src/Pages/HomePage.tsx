@@ -45,7 +45,7 @@ export const HomePage: React.FC = () => {
 
         </div> :
         fetchLoading ? <div className='w-full h-full mx-auto flex justify-center max-w-screen-xl py-48 px-4 lg:px-8 lg:py-64'><Spinner className="h-16 w-16 text-gray-900/50 animate-spin" /></div> :
-          (!store && fetchError) ? <div className='w-full h-full mx-auto flex justify-center max-w-screen-xl py-36 px-4 lg:px-8 lg:py-36'>
+          (!store && !fetchError) ? <div className='w-full h-full mx-auto flex justify-center max-w-screen-xl py-36 px-4 lg:px-8 lg:py-36'>
             <div>
               <img src={emptyList} alt="Can not found Images" />
               <Typography

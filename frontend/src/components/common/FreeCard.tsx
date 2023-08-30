@@ -107,7 +107,7 @@ export const FreeCard: React.FC = () => {
                     ripple={false}
                     fullWidth={true}
                 >
-                    Buy Now
+                    Current Tier
                 </Button>
             </CardFooter>
         </Card>

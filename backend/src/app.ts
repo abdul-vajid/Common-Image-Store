@@ -3,10 +3,12 @@ import dotenv from "dotenv";
 import helmet from 'helmet';
 dotenv.config();
 import morgan from "morgan";
+import schedule from "node-schedule";
 import errorHandler from "./middlewares/error/errorHandler";
 import cors from "./middlewares/security/cors";
 import connectDatbase from "./config/database";
 import routes from "./routes";
+import { handleTierExpires } from "./utils/autoExpiring";
 
 const app = express();
 
@@ -28,6 +30,19 @@ app.use((req, res) => {
 });
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`The server connection is now established and running on port ${port}`);
+});
+
+schedule.scheduleJob("1 0 * * *", async () => {
+  console.log("Running handleTierExpires at 12:01 AM");
+  await handleTierExpires();
+});
+
+process.on("SIGINT", () => {
+  console.log("Closing server gracefully...");
+  server.close(() => {
+    console.log("Server closed.");
+    process.exit(0);
+  });
 });

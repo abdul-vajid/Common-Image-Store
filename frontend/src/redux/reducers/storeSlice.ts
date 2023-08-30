@@ -63,6 +63,12 @@ const storeSlice = createSlice({
     name: 'store',
     initialState,
     reducers: {
+        clearUploadErrorMessage: state => {
+            state.uploadError = null
+        },
+        clearIsUploaded: state => {
+            state.isUploaded = false
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(fetchStore.pending, (state) => {
@@ -96,3 +102,4 @@ const storeSlice = createSlice({
 })
 
 export default storeSlice.reducer
+export const { clearUploadErrorMessage, clearIsUploaded} = storeSlice.actions

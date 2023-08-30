@@ -84,9 +84,9 @@ export const unsubscribtionController = async (req: Request, res: Response, next
         })
 
     } catch (error) {
-
+        next(error)
     }
-} 
+}
 
 
 export const getPlansController = async (req: Request, res: Response, next: NextFunction) => {

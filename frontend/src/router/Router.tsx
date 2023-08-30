@@ -1,18 +1,22 @@
 import React from "react";
 import { Routes, Route, } from "react-router-dom";
-import {HomePage} from "../Pages/HomePage";
-import NotFound from "./NotFound";
+import { HomePage } from "../Pages/HomePage";
 import UserProtect from "./protectRouter/UserProtect";
 import GuestProtect from "./protectRouter/GuestProtect";
-import {LandingPage} from "../Pages/LandingPage";
-import {SigninPage} from "../Pages/SigninPage";
-import {SignupPage} from "../Pages/SignupPage";
+import { LandingPage } from "../Pages/LandingPage";
+import { SigninPage } from "../Pages/SigninPage";
+import { SignupPage } from "../Pages/SignupPage";
+import { SuccessPage } from "../Pages/SuccessPage";
+import { CancelPage } from "../Pages/CancelPage";
+import { NotFound } from "./NotFound";
 
 const Router: React.FC = () => {
     return (
         <Routes>
-            <Route path="/home" element={<UserProtect />}>
-                <Route path="/home" element={<HomePage />} />
+            <Route path="/user" element={<UserProtect />}>
+                <Route path="/user/home" element={<HomePage />} />
+                <Route path="/user/success/:id" element={<SuccessPage />} />
+                <Route path="/user/cancel/:id" element={<CancelPage />} />
             </Route>
             <Route path="/" element={<GuestProtect />}>
                 <Route path="/signin" element={<SigninPage />} />

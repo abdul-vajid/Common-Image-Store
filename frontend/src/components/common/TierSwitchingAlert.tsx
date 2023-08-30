@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
     Button,
     Dialog,
@@ -6,7 +6,12 @@ import {
     DialogBody,
     DialogFooter,
     Typography,
+    Spinner,
 } from "@material-tailwind/react";
+import { useAppDispatch, useAppSelector } from "../../app/hooks/storeHook";
+import { setIsJustUnsubedFalse, unsubscribe } from "../../redux/reducers/userSlice";
+import { axiosPrivate } from "../../app/config/apiConfig";
+import { useErrorToast, useSuccessToast } from "../../app/hooks/toastHooks";
 
 type TierSwitchAlert = {
     handleOpen: () => void
@@ -14,6 +19,27 @@ type TierSwitchAlert = {
 }
 
 export const TierSwitchAlert: React.FC<TierSwitchAlert> = ({ handleOpen, open }) => {
+    const dispatch = useAppDispatch()
+    const { accessToken } = useAppSelector(state => state.userReducer)
+    const { unsubLoading, unsubError, isJustUnsubed } = useAppSelector(state => state.userReducer)
+    const axiosInstance = axiosPrivate(accessToken)
+
+    const handleUnsubscribe = () => {
+        dispatch(unsubscribe(axiosInstance))
+    }
+
+    useEffect(() => {
+        if (unsubError) useErrorToast({ message: unsubError ? unsubError : "Something went wrong. Try again later" })
+    }, [unsubError])
+
+    useEffect(() => {
+        if (isJustUnsubed) {
+            handleOpen()
+            dispatch(setIsJustUnsubedFalse())
+            useSuccessToast({ message: "You have unsubscribed from the Pro Tier access." })
+        }
+    }, [isJustUnsubed])
+
     return (
         <>
             <Dialog open={open} handler={handleOpen}>
@@ -49,8 +75,11 @@ export const TierSwitchAlert: React.FC<TierSwitchAlert> = ({ handleOpen, open })
                     <Button variant="text" color="blue-gray" onClick={handleOpen}>
                         Cancel
                     </Button>
-                    <Button variant="gradient" color="red" onClick={handleOpen}>
-                        Ok, Got it
+                    <Button variant="gradient" color="red" onClick={handleUnsubscribe}>
+                        {
+                            unsubLoading ? <Spinner></Spinner> :
+                                "Ok, Got it"
+                        }
                     </Button>
                 </DialogFooter>
             </Dialog>

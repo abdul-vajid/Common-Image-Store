@@ -10,7 +10,7 @@ const GuestProtect: React.FC = () => {
     return !accessToken || accessToken == null ? (
         <Outlet />
     ) : (
-        <Navigate to="/home" state={{ from: location.pathname }} replace={true} />
+        <Navigate to="/user/home" state={{ from: location.pathname }} replace={true} />
     )
 }
 

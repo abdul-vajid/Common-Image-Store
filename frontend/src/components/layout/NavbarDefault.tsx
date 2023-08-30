@@ -41,6 +41,7 @@ export const NavbarDefault: React.FC = () => {
     }
   }, [isJustSign])
 
+
   return (
     <>
       <Navbar className="mx-auto max-w-screen-xl py-2 px-4 lg:px-8 lg:py-4">
@@ -65,7 +66,7 @@ export const NavbarDefault: React.FC = () => {
               ripple={false}
               label={
                 <Typography color="blue-gray" className="font-medium">
-                  PRO
+                  {tier}
                 </Typography>
               }
               className="h-full w-full checked:bg-primary"

@@ -15,10 +15,10 @@ type InitialState = {
     isJustSign: boolean;
     unsubError: string | null,
     unsubLoading: boolean;
-    isUnsubed: boolean;
+    isJustUnsubed: boolean;
     subError: string | null,
     subLoading: boolean;
-    isSubed: boolean;
+    isJustSubed: boolean;
     verifyPaymentError: string | null,
     verifyPaymentLoading: boolean;
     isPaymentVerified: boolean;
@@ -39,10 +39,10 @@ const initialState: InitialState = {
     isJustSign: false,
     unsubError: null,
     unsubLoading: false,
-    isUnsubed: false,
+    isJustUnsubed: false,
     subError: null,
     subLoading: false,
-    isSubed: false,
+    isJustSubed: false,
     verifyPaymentError: null,
     verifyPaymentLoading: false,
     isPaymentVerified: false,
@@ -96,7 +96,7 @@ export const userSignup = createAsyncThunk('user/signup', async (options: Signup
 export const unsubscribe = createAsyncThunk('tier/unsubscribe', async (axiosInstance: AxiosInstance) => {
     const axios = axiosInstance;
     try {
-        const response = await axios.get("/unsubscribe");
+        const response = await axios.put("/subscription");
         return response.data;
     } catch (error: any) {
         throw new Error(error.response?.data?.message || 'Something went wrong');
@@ -106,7 +106,7 @@ export const unsubscribe = createAsyncThunk('tier/unsubscribe', async (axiosInst
 export const subscribe = createAsyncThunk('tier/subscribe', async (options: TierOptions) => {
     const axios = options.axiosInstance;
     try {
-        const response = await axios.post("/subscribe", {
+        const response = await axios.post("/subscription", {
             priceId: options.id
         });
         return response.data;
@@ -118,7 +118,7 @@ export const subscribe = createAsyncThunk('tier/subscribe', async (options: Tier
 export const verifyPayment = createAsyncThunk('payment/verify', async (options: TierOptions) => {
     const axios = options.axiosInstance;
     try {
-        const response = await axios.post("/verify-payment", {
+        const response = await axios.post("/subscription/verify-payment", {
             sessionId: options.id
         });
         return response.data;
@@ -140,6 +140,19 @@ const userSlice = createSlice({
         setIsJustSignFalse: state => {
             state.isJustSign = false;
         },
+        setIsJustUnsubedFalse: state => {
+            state.isJustUnsubed = false;
+        },
+        setIsJustSubedFalse: state => {
+            state.isJustSubed = false;
+        },
+        setAllErrorsEmpty: state => {
+            state.subError = null
+            state.unsubError = null
+            state.signinError = null
+            state.signupError = null
+            state.verifyPaymentError = null
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(userSignin.pending, (state) => {
@@ -181,11 +194,11 @@ const userSlice = createSlice({
             .addCase(unsubscribe.pending, (state) => {
                 state.unsubError = null;
                 state.unsubLoading = true;
-                state.isUnsubed = false;
+                state.isJustUnsubed = false;
             })
             .addCase(unsubscribe.fulfilled, (state, action: PayloadAction<UserApiResponse>) => {
                 state.unsubLoading = false;
-                state.isUnsubed = true;
+                state.isJustUnsubed = true;
                 state.fullName = action.payload.user.fullname
                 state.email = action.payload.user.email
                 state.tier = action.payload.user.tier
@@ -193,23 +206,25 @@ const userSlice = createSlice({
             })
             .addCase(unsubscribe.rejected, (state, action) => {
                 state.unsubLoading = false;
-                state.isUnsubed = false;
+                state.isJustUnsubed = false;
                 state.unsubError = action.error.message || 'Something went wrong, Try again';
             })
             .addCase(subscribe.pending, (state) => {
                 state.subError = null;
                 state.subLoading = true;
-                state.isSubed = false;
+                state.isJustSubed = false;
+                state.paymentSession = null;
+                state.verificationId = null;
             })
             .addCase(subscribe.fulfilled, (state, action: PayloadAction<SubApiResponse>) => {
-                state.isSubed = true;
+                state.isJustSubed = true;
                 state.subLoading = false;
                 state.paymentSession = action.payload.data.session;
                 state.verificationId = action.payload.data.verificationId;
             })
             .addCase(subscribe.rejected, (state, action) => {
                 state.subLoading = false;
-                state.isSubed = false;
+                state.isJustSubed = false;
                 state.subError = action.error.message || 'Something went wrong, Try again';
             })
             .addCase(verifyPayment.pending, (state) => {
@@ -222,12 +237,16 @@ const userSlice = createSlice({
                 state.verifyPaymentLoading = false;
                 state.paymentSession = null
                 state.verificationId = null
+                state.paymentSession = null;
+                state.verificationId = null;
                 state.fullName = action.payload.user.fullname
                 state.email = action.payload.user.email
                 state.tier = action.payload.user.tier
                 state.tierExpires = action.payload.user.tierExpires
             })
             .addCase(verifyPayment.rejected, (state, action) => {
+                state.paymentSession = null;
+                state.verificationId = null;
                 state.verifyPaymentLoading = false;
                 state.isPaymentVerified = false;
                 state.verifyPaymentError = action.error.message || 'Something went wrong, Try again';
@@ -237,4 +256,4 @@ const userSlice = createSlice({
 })
 
 export default userSlice.reducer
-export const { signout, setIsJustSignFalse } = userSlice.actions
+export const { signout, setIsJustSignFalse, setIsJustSubedFalse, setIsJustUnsubedFalse, setAllErrorsEmpty } = userSlice.actions

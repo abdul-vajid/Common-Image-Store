@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 import { useFormik } from 'formik'
 import { signinSchema } from '../utils/validations/signinSchema';
 import { useAppDispatch, useAppSelector } from '../app/hooks/storeHook';
-import { userSignup } from '../redux/reducers/userSlice';
+import { setAllErrorsEmpty, userSignup } from '../redux/reducers/userSlice';
 import axiosInstance from '../app/config/apiConfig';
 import { useErrorToast } from '../app/hooks/toastHooks';
 
@@ -39,7 +39,12 @@ export const SignupPage: React.FC = () => {
     })
 
     useEffect(() => {
-        if (signupError) useErrorToast({ message: signupError })
+        if (signupError) {
+            useErrorToast({ message: signupError })
+            setTimeout(() => {
+                dispatch(setAllErrorsEmpty())
+            }, 10000)
+        }
     }, [signupError])
 
     return (

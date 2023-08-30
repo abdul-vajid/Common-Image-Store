@@ -5,9 +5,14 @@ import {
     CardFooter,
     Typography,
     Button,
+    Spinner,
 } from "@material-tailwind/react";
+import { useAppDispatch, useAppSelector } from "../../app/hooks/storeHook";
+import { axiosPrivate } from "../../app/config/apiConfig";
+import { subscribe } from "../../redux/reducers/userSlice";
+import React, { useEffect } from "react"
 
-const CheckIcon = () => {
+const CheckIcon: React.FC = () => {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -27,6 +32,19 @@ const CheckIcon = () => {
 }
 
 export const ProCard: React.FC = () => {
+    const { accessToken, paymentSession, subLoading } = useAppSelector(state => state.userReducer)
+    const axiosInstance = axiosPrivate(accessToken)
+    const dispatch = useAppDispatch()
+
+    const handleSubscribe = () => {
+        dispatch(subscribe({ axiosInstance, id: "price_1NjhjqSD6ZcbOmIRzVdPqaC7" }));
+    }
+
+    useEffect(() => {
+        if (paymentSession) window.location.href = paymentSession.url;
+    }, [paymentSession])
+
+
     return (
         <Card color="deep-purple" variant="gradient" className="w-full max-w-[20rem] px-8 pt-5 pb-4 md:px-8 md:pt-8 md:pb-8">
             <CardHeader
@@ -84,11 +102,15 @@ export const ProCard: React.FC = () => {
                 <Button
                     size="lg"
                     color="white"
-                    className="hover:scale-[1.02] focus:scale-[1.02] active:scale-100"
+                    className="hover:scale-[1.02] focus:scale-[1.02] active:scale-100 flex items-center gap-5 justify-center"
                     ripple={false}
                     fullWidth={true}
+                    onClick={handleSubscribe}
                 >
-                    Buy Now
+                    {
+                        subLoading ? <Spinner></Spinner> :
+                            "Subscribe Now"
+                    }
                 </Button>
             </CardFooter>
         </Card>

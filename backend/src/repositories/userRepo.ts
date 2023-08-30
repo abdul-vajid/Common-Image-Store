@@ -42,3 +42,25 @@ export const updateTier = async (_id: string, tier: string, tierExpires: Date | 
         throw new Error(error.message || "Something went wrong! Try again later");
     }
 };
+
+export const findAllProUsers = async (): Promise<UserDoc[]> => {
+    try {
+        const users = await User.find({
+            tier: "PRO"
+        });
+        return users as UserDoc[];
+    } catch (error) {
+        throw new Error(error.message || "Somethinng went wrong! Try again later")
+    }
+};
+
+export const updateTierByIds = (expiredUserIds: string[]) => {
+    try {
+        User.updateMany(
+            { _id: { $in: expiredUserIds } },
+            { $set: { tier: "FREE", tierExpires: null } }
+        );
+    } catch (error) {
+        throw new Error(error.message || "Somethinng went wrong! Try again later")
+    }
+};
