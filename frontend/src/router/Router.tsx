@@ -1,13 +1,13 @@
 import React from "react";
 import { Routes, Route, } from "react-router-dom";
-import { HomePage } from "../Pages/HomePage";
+import { HomePage } from "../pages/HomePage";
 import UserProtect from "./protectRouter/UserProtect";
 import GuestProtect from "./protectRouter/GuestProtect";
-import { LandingPage } from "../Pages/LandingPage";
-import { SigninPage } from "../Pages/SigninPage";
-import { SignupPage } from "../Pages/SignupPage";
-import { SuccessPage } from "../Pages/SuccessPage";
-import { CancelPage } from "../Pages/CancelPage";
+import { LandingPage } from "../pages/LandingPage";
+import { SigninPage } from "../pages/SigninPage";
+import { SignupPage } from "../pages/SignupPage";
+import { SuccessPage } from "../pages/SuccessPage";
+import { CancelPage } from "../pages/CancelPage";
 import { NotFound } from "./NotFound";
 
 const Router: React.FC = () => {
